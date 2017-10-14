@@ -32,7 +32,7 @@ interface Filesystem
      * @param  string  $path
      * @return string
      *
-     * @throws \Support\Filesystem\Contracts\FileNotFoundException
+     * @throws \Support\Filesystem\Exception\FileNotFoundException
      */
     public function get($path);
 
