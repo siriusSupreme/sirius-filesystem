@@ -17,7 +17,9 @@
   ],
   "require": {
     "php": ">=7.0.0",
-    "symfony/Finder": "^3.3"
+    "siriussupreme/sirius-macro": "^1.0",
+    "symfony/Finder": "^3.3",
+    "symfony/http-foundation": "^3.3"
   },
   "require-dev": {
     "phpunit/phpunit": "^6.4"
@@ -44,7 +46,9 @@
     }
   },
   "config": {
-    "preferred-install": "dist"
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "optimize-autoloader": true
   },
   "scripts": {
     "pre-install-cmd": [],

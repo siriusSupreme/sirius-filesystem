@@ -4,9 +4,9 @@ namespace Sirius\Support;
 
 use ErrorException;
 use FilesystemIterator;
+use Sirius\Macro\Traits\Macroable;
 use Symfony\Component\Finder\Finder;
-use Illuminate\Support\Traits\Macroable;
-use Support\Filesystem\Exception\FileNotFoundException;
+use Support\Filesystem\Exceptions\FileNotFoundException;
 
 class Filesystem
 {
@@ -30,7 +30,7 @@ class Filesystem
      * @param  bool  $lock
      * @return string
      *
-     * @throws \Support\Filesystem\Exception\FileNotFoundException
+     * @throws \Support\Filesystem\Exceptions\FileNotFoundException
      */
     public function get($path, $lock = false)
     {
@@ -76,7 +76,7 @@ class Filesystem
      * @param  string  $path
      * @return mixed
      *
-     * @throws \Support\Filesystem\Exception\FileNotFoundException
+     * @throws \Support\Filesystem\Exceptions\FileNotFoundException
      */
     public function getRequire($path)
     {
