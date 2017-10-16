@@ -2,21 +2,20 @@
 
 namespace Illuminate\Filesystem;
 
-use Carbon\Carbon;
-use RuntimeException;
-use Sirius\Filesystem\File;
-use Sirius\Support\Str;
 use InvalidArgumentException;
-use Sirius\Filesystem\UploadedFile;
-use Sirius\Support\Collection;
-use League\Flysystem\AdapterInterface;
-use PHPUnit\Framework\Assert as PHPUnit;
-use League\Flysystem\FilesystemInterface;
-use League\Flysystem\FileNotFoundException;
 use League\Flysystem\Adapter\Local as LocalAdapter;
+use League\Flysystem\AdapterInterface;
+use League\Flysystem\FileNotFoundException;
+use League\Flysystem\FilesystemInterface;
+use PHPUnit\Framework\Assert as PHPUnit;
+use RuntimeException;
 use Sirius\Filesystem\Contracts\Cloud as CloudFilesystemContract;
 use Sirius\Filesystem\Contracts\Filesystem as FilesystemContract;
 use Sirius\Filesystem\Exceptions\FileNotFoundException as ContractFileNotFoundException;
+use Sirius\Filesystem\File;
+use Sirius\Filesystem\UploadedFile;
+use Sirius\Support\Collection;
+use Sirius\Support\Str;
 
 /**
  * @mixin \League\Flysystem\FilesystemInterface
@@ -193,7 +192,7 @@ class FilesystemAdapter implements FilesystemContract, CloudFilesystemContract
      *
      * @param  string  $path
      * @param  string  $visibility
-     * @return void
+     * @return mixed
      */
     public function setVisibility($path, $visibility)
     {
@@ -492,7 +491,7 @@ class FilesystemAdapter implements FilesystemContract, CloudFilesystemContract
     protected function parseVisibility($visibility)
     {
         if (is_null($visibility)) {
-            return;
+            return null;
         }
 
         switch ($visibility) {
