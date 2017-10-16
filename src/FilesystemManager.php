@@ -20,7 +20,7 @@ class FilesystemManager implements Factory
     /**
      * The container instance.
      *
-     * @var \Sirius\Container\Container
+     * @var \Sirius\Container\Contracts\Container
      */
     protected $container;
 
@@ -41,7 +41,7 @@ class FilesystemManager implements Factory
     /**
      * Create a new filesystem manager instance.
      *
-     * @param  \Sirius\Container\Container $container
+     * @param  \Sirius\Container\Contracts\Container $container
      *
      * @return void
      */
