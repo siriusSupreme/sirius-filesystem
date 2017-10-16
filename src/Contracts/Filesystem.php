@@ -1,6 +1,6 @@
 <?php
 
-namespace Support\Filesystem\Contracts;
+namespace Sirius\Filesystem\Contracts;
 
 interface Filesystem
 {
@@ -32,7 +32,7 @@ interface Filesystem
      * @param  string  $path
      * @return string
      *
-     * @throws \Support\Filesystem\Exception\FileNotFoundException
+     * @throws \Support\Filesystem\Exceptions\FileNotFoundException
      */
     public function get($path);
 

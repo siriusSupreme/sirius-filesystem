@@ -1,6 +1,6 @@
 <?php
 
-namespace Support\Filesystem\Contracts;
+namespace Sirius\Filesystem\Contracts;
 
 interface Cloud extends Filesystem
 {

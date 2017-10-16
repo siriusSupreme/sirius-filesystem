@@ -3,30 +3,26 @@
 namespace Illuminate\Filesystem;
 
 use Closure;
-use Aws\S3\S3Client;
-use OpenCloud\Rackspace;
-use Illuminate\Support\Arr;
+use Sirius\Filesystem\Contracts\Factory;
+use Sirius\Support\Arr;
 use InvalidArgumentException;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\FilesystemInterface;
 use League\Flysystem\Filesystem as Flysystem;
 use League\Flysystem\Adapter\Ftp as FtpAdapter;
-use League\Flysystem\Rackspace\RackspaceAdapter;
 use League\Flysystem\Adapter\Local as LocalAdapter;
-use League\Flysystem\AwsS3v3\AwsS3Adapter as S3Adapter;
-use Illuminate\Contracts\Filesystem\Factory as FactoryContract;
 
 /**
- * @mixin \Illuminate\Contracts\Filesystem\Filesystem
+ * @mixin \Sirius\Filesystem\Contracts\Filesystem
  */
-class FilesystemManager implements FactoryContract
+class FilesystemManager implements Factory
 {
     /**
-     * The application instance.
+     * The container instance.
      *
-     * @var \Illuminate\Contracts\Foundation\Application
+     * @var \Sirius\Container\Container
      */
-    protected $app;
+    protected $container;
 
     /**
      * The array of resolved filesystem drivers.
@@ -45,19 +41,20 @@ class FilesystemManager implements FactoryContract
     /**
      * Create a new filesystem manager instance.
      *
-     * @param  \Illuminate\Contracts\Foundation\Application  $app
+     * @param  \Sirius\Container\Container $container
+     *
      * @return void
      */
-    public function __construct($app)
+    public function __construct($container)
     {
-        $this->app = $app;
+        $this->container = $container;
     }
 
     /**
      * Get a filesystem instance.
      *
      * @param  string  $name
-     * @return \Illuminate\Contracts\Filesystem\Filesystem
+     * @return \Sirius\Filesystem\Contracts\Filesystem
      */
     public function drive($name = null)
     {
@@ -68,7 +65,7 @@ class FilesystemManager implements FactoryContract
      * Get a filesystem instance.
      *
      * @param  string  $name
-     * @return \Illuminate\Contracts\Filesystem\Filesystem
+     * @return \Sirius\Filesystem\Contracts\Filesystem
      */
     public function disk($name = null)
     {
@@ -80,7 +77,7 @@ class FilesystemManager implements FactoryContract
     /**
      * Get a default cloud filesystem instance.
      *
-     * @return \Illuminate\Contracts\Filesystem\Filesystem
+     * @return \Sirius\Filesystem\Contracts\Filesystem
      */
     public function cloud()
     {
@@ -93,7 +90,7 @@ class FilesystemManager implements FactoryContract
      * Attempt to get the disk from the local cache.
      *
      * @param  string  $name
-     * @return \Illuminate\Contracts\Filesystem\Filesystem
+     * @return \Sirius\Filesystem\Contracts\Filesystem
      */
     protected function get($name)
     {
@@ -104,7 +101,7 @@ class FilesystemManager implements FactoryContract
      * Resolve the given disk.
      *
      * @param  string  $name
-     * @return \Illuminate\Contracts\Filesystem\Filesystem
+     * @return \Sirius\Filesystem\Contracts\Filesystem
      *
      * @throws \InvalidArgumentException
      */
@@ -129,11 +126,11 @@ class FilesystemManager implements FactoryContract
      * Call a custom driver creator.
      *
      * @param  array  $config
-     * @return \Illuminate\Contracts\Filesystem\Filesystem
+     * @return \Sirius\Filesystem\Contracts\Filesystem
      */
     protected function callCustomCreator(array $config)
     {
-        $driver = $this->customCreators[$config['driver']]($this->app, $config);
+        $driver = $this->customCreators[$config['driver']]($this->container, $config);
 
         if ($driver instanceof FilesystemInterface) {
             return $this->adapt($driver);
@@ -146,7 +143,7 @@ class FilesystemManager implements FactoryContract
      * Create an instance of the local driver.
      *
      * @param  array  $config
-     * @return \Illuminate\Contracts\Filesystem\Filesystem
+     * @return \Sirius\Filesystem\Contracts\Filesystem
      */
     public function createLocalDriver(array $config)
     {
@@ -165,7 +162,7 @@ class FilesystemManager implements FactoryContract
      * Create an instance of the ftp driver.
      *
      * @param  array  $config
-     * @return \Illuminate\Contracts\Filesystem\Filesystem
+     * @return \Sirius\Filesystem\Contracts\Filesystem
      */
     public function createFtpDriver(array $config)
     {
@@ -179,82 +176,11 @@ class FilesystemManager implements FactoryContract
     }
 
     /**
-     * Create an instance of the Amazon S3 driver.
-     *
-     * @param  array  $config
-     * @return \Illuminate\Contracts\Filesystem\Cloud
-     */
-    public function createS3Driver(array $config)
-    {
-        $s3Config = $this->formatS3Config($config);
-
-        $root = $s3Config['root'] ?? null;
-
-        $options = $config['options'] ?? [];
-
-        return $this->adapt($this->createFlysystem(
-            new S3Adapter(new S3Client($s3Config), $s3Config['bucket'], $root, $options), $config
-        ));
-    }
-
-    /**
-     * Format the given S3 configuration with the default options.
-     *
-     * @param  array  $config
-     * @return array
-     */
-    protected function formatS3Config(array $config)
-    {
-        $config += ['version' => 'latest'];
-
-        if ($config['key'] && $config['secret']) {
-            $config['credentials'] = Arr::only($config, ['key', 'secret']);
-        }
-
-        return $config;
-    }
-
-    /**
-     * Create an instance of the Rackspace driver.
-     *
-     * @param  array  $config
-     * @return \Illuminate\Contracts\Filesystem\Cloud
-     */
-    public function createRackspaceDriver(array $config)
-    {
-        $client = new Rackspace($config['endpoint'], [
-            'username' => $config['username'], 'apiKey' => $config['key'],
-        ]);
-
-        $root = $config['root'] ?? null;
-
-        return $this->adapt($this->createFlysystem(
-            new RackspaceAdapter($this->getRackspaceContainer($client, $config), $root), $config
-        ));
-    }
-
-    /**
-     * Get the Rackspace Cloud Files container.
-     *
-     * @param  \OpenCloud\Rackspace  $client
-     * @param  array  $config
-     * @return \OpenCloud\ObjectStore\Resource\Container
-     */
-    protected function getRackspaceContainer(Rackspace $client, array $config)
-    {
-        $urlType = $config['url_type'] ?? null;
-
-        $store = $client->objectStoreService('cloudFiles', $config['region'], $urlType);
-
-        return $store->getContainer($config['container']);
-    }
-
-    /**
      * Create a Flysystem instance with the given adapter.
      *
      * @param  \League\Flysystem\AdapterInterface  $adapter
      * @param  array  $config
-     * @return \League\Flysystem\FlysystemInterface
+     * @return \League\Flysystem\FilesystemInterface
      */
     protected function createFlysystem(AdapterInterface $adapter, array $config)
     {
@@ -267,7 +193,7 @@ class FilesystemManager implements FactoryContract
      * Adapt the filesystem implementation.
      *
      * @param  \League\Flysystem\FilesystemInterface  $filesystem
-     * @return \Illuminate\Contracts\Filesystem\Filesystem
+     * @return \Sirius\Filesystem\Contracts\Filesystem
      */
     protected function adapt(FilesystemInterface $filesystem)
     {
@@ -294,7 +220,7 @@ class FilesystemManager implements FactoryContract
      */
     protected function getConfig($name)
     {
-        return $this->app['config']["filesystems.disks.{$name}"];
+        return $this->container['config']["filesystems.disks.{$name}"];
     }
 
     /**
@@ -304,7 +230,7 @@ class FilesystemManager implements FactoryContract
      */
     public function getDefaultDriver()
     {
-        return $this->app['config']['filesystems.default'];
+        return $this->container['config']['filesystems.default'];
     }
 
     /**
@@ -314,7 +240,7 @@ class FilesystemManager implements FactoryContract
      */
     public function getDefaultCloudDriver()
     {
-        return $this->app['config']['filesystems.cloud'];
+        return $this->container['config']['filesystems.cloud'];
     }
 
     /**

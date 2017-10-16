@@ -1,12 +1,13 @@
 <?php
 
-namespace Sirius\Support;
+namespace Sirius\Filesystem;
 
 use ErrorException;
 use FilesystemIterator;
 use Sirius\Macro\Traits\Macroable;
+use Sirius\Filesystem\Exceptions\FileNotFoundException;
 use Symfony\Component\Finder\Finder;
-use Support\Filesystem\Exceptions\FileNotFoundException;
+use function Sirius\Support\windows_os;
 
 class Filesystem
 {
@@ -220,7 +221,7 @@ class Filesystem
      *
      * @param  string  $target
      * @param  string  $link
-     * @return void
+     * @return bool
      */
     public function link($target, $link)
     {

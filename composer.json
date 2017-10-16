@@ -17,7 +17,9 @@
   ],
   "require": {
     "php": ">=7.0.0",
+    "league/flysystem": "^1.0",
     "siriussupreme/sirius-macro": "^1.0",
+    "siriussupreme/sirius-support": "^1.0",
     "symfony/Finder": "^3.3",
     "symfony/http-foundation": "^3.3"
   },

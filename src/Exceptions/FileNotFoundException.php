@@ -1,6 +1,6 @@
 <?php
 
-namespace Support\Filesystem\Exceptions;
+namespace Sirius\Filesystem\Exceptions;
 
 use Exception;
 

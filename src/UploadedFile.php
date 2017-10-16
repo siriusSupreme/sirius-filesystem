@@ -2,9 +2,9 @@
 
 namespace Sirius\Filesystem;
 
-use Illuminate\Support\Arr;
-use Illuminate\Container\Container;
-use Illuminate\Contracts\Filesystem\Factory as FilesystemFactory;
+use Sirius\Support\Arr;
+use Sirius\Container\Container;
+use Sirius\Filesystem\Contracts\Factory as FilesystemFactory;
 use Sirius\Filesystem\Traits\FileHelpers;
 use Sirius\Macro\Traits\Macroable;
 use Symfony\Component\HttpFoundation\File\UploadedFile as SymfonyUploadedFile;
@@ -12,16 +12,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile as SymfonyUploadedFile;
 class UploadedFile extends SymfonyUploadedFile
 {
     use FileHelpers, Macroable;
-
-    /**
-     * Begin creating a new file fake.
-     *
-     * @return \Illuminate\Http\Testing\FileFactory
-     */
-    public static function fake()
-    {
-        return new Testing\FileFactory;
-    }
 
     /**
      * Store the uploaded file on a filesystem disk.
