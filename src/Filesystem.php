@@ -5,9 +5,9 @@ namespace Sirius\Filesystem;
 use ErrorException;
 use FilesystemIterator;
 use Sirius\Macro\Traits\Macroable;
-use Sirius\Filesystem\Exceptions\FileNotFoundException;
-use Symfony\Component\Finder\Finder;
 use function Sirius\Support\windows_os;
+use Symfony\Component\Finder\Finder;
+use Sirius\Filesystem\Exceptions\FileNotFoundException;
 
 class Filesystem
 {
@@ -31,7 +31,7 @@ class Filesystem
      * @param  bool  $lock
      * @return string
      *
-     * @throws \Support\Filesystem\Exceptions\FileNotFoundException
+     * @throws \Sirius\Filesystem\Exceptions\FileNotFoundException
      */
     public function get($path, $lock = false)
     {
@@ -77,7 +77,7 @@ class Filesystem
      * @param  string  $path
      * @return mixed
      *
-     * @throws \Support\Filesystem\Exceptions\FileNotFoundException
+     * @throws \Sirius\Filesystem\Exceptions\FileNotFoundException
      */
     public function getRequire($path)
     {
@@ -92,7 +92,6 @@ class Filesystem
      * Require the given file once.
      *
      * @param  string  $file
-     * @return mixed
      */
     public function requireOnce($file)
     {
@@ -221,7 +220,6 @@ class Filesystem
      *
      * @param  string  $target
      * @param  string  $link
-     * @return bool
      */
     public function link($target, $link)
     {

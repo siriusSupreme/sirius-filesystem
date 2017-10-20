@@ -18,6 +18,8 @@
   "require": {
     "php": ">=7.0.0",
     "league/flysystem": "^1.0",
+    "league/flysystem-aws-s3-v3": "^1.0",
+    "league/flysystem-rackspace": "^1.0",
     "siriussupreme/sirius-container": "^1.0",
     "siriussupreme/sirius-macro": "^1.0",
     "siriussupreme/sirius-support": "^1.0",
@@ -38,7 +40,11 @@
     "psr-4": {},
     "classmap": []
   },
-  "suggest": {},
+  "suggest": {
+    "league/flysystem": "Required to use the Flysystem local and FTP drivers (~1.0).",
+    "league/flysystem-aws-s3-v3": "Required to use the Flysystem S3 driver (~1.0).",
+    "league/flysystem-rackspace": "Required to use the Flysystem Rackspace driver (~1.0)."
+  },
   "extra": {},
   "minimum-stability": "stable",
   "prefer-stable": true,
