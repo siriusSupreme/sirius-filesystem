@@ -71,7 +71,7 @@ class UploadedFile extends SymfonyUploadedFile
 
         $disk = Arr::pull($options, 'disk');
 
-        return FilesystemManager::getInstance()->disk($disk)->putFileAs(
+        return FilesystemManager::getInstance( $options)->disk($disk)->putFileAs(
             $path, $this, $name, $options
         );
     }
