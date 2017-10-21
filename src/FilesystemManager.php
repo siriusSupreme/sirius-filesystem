@@ -20,8 +20,13 @@ use Sirius\Support\Repository as Config;
 
 class FilesystemManager implements FactoryContract
 {
+  /**
+   * @var FilesystemManager
+   */
+  private static $instance=null;
+
     /**
-     * The application instance.
+     * The repository instance.
      *
      * @var \Sirius\Support\Contracts\Repository
      */
@@ -62,6 +67,24 @@ class FilesystemManager implements FactoryContract
 
       $this->config = new Config( $config );
 
+      self::$instance=$this;
+
+    }
+
+  /**
+   * 获取 文件系统管理器 实例
+   *
+   * @param Repository|array $config
+   * @param bool $force
+   *
+   * @return FilesystemManager
+   */
+    public static function getInstance($config=[],$force=false){
+      if (is_null( self::$instance) || $force===true){
+        self::$instance=new self($config);
+      }
+
+      return self::$instance;
     }
 
     /**

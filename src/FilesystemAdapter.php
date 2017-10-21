@@ -123,7 +123,8 @@ class FilesystemAdapter implements FilesystemContract, CloudFilesystemContract
         // automatically store the file using a stream. This provides a convenient path
         // for the developer to store streams without managing them manually in code.
         if ($contents instanceof File ||
-            $contents instanceof UploadedFile) {
+            $contents instanceof UploadedFile ||
+            $contents instanceof \SplFileInfo) {
             return $this->putFile($path, $contents, $options);
         }
 
@@ -136,7 +137,7 @@ class FilesystemAdapter implements FilesystemContract, CloudFilesystemContract
      * Store the uploaded file on the disk.
      *
      * @param  string  $path
-     * @param  \Sirius\Filesystem\File|\Sirius\Filesystem\UploadedFile  $file
+     * @param  \Sirius\Filesystem\File|\Sirius\Filesystem\UploadedFile|\SplFileInfo  $file
      * @param  array  $options
      *
      * @return string|false
@@ -150,7 +151,7 @@ class FilesystemAdapter implements FilesystemContract, CloudFilesystemContract
      * Store the uploaded file on the disk with a given name.
      *
      * @param  string  $path
-     * @param  \Sirius\Filesystem\File|\Sirius\Filesystem\UploadedFile  $file
+     * @param  \Sirius\Filesystem\File|\Sirius\Filesystem\UploadedFile|\SplFileInfo  $file
      * @param  string  $name
      * @param  array  $options
      *
