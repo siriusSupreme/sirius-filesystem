@@ -5,7 +5,6 @@ namespace Sirius\Filesystem;
 use Sirius\Filesystem\Traits\FileHelpers;
 use Sirius\Macro\Traits\Macroable;
 use Sirius\Support\Arr;
-use Sirius\Filesystem\Contracts\Factory as FilesystemFactory;
 use Symfony\Component\HttpFoundation\File\UploadedFile as SymfonyUploadedFile;
 
 class UploadedFile extends SymfonyUploadedFile

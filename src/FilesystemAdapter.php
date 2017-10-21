@@ -111,9 +111,11 @@ class FilesystemAdapter implements FilesystemContract, CloudFilesystemContract
      * @param  string  $path
      * @param  string|resource  $contents
      * @param  mixed  $options
+     * @param  string $defaults 默认获得存储文件名方法
+     *
      * @return bool
      */
-    public function put($path, $contents, $options = [])
+    public function put($path, $contents, $options = [], $defaults = 'hashName')
     {
         $options = is_string($options)
                      ? ['visibility' => $options]
@@ -125,7 +127,7 @@ class FilesystemAdapter implements FilesystemContract, CloudFilesystemContract
         if ($contents instanceof File ||
             $contents instanceof UploadedFile ||
             $contents instanceof \SplFileInfo) {
-            return $this->putFile($path, $contents, $options);
+            return $this->putFile($path, $contents, $options, $defaults);
         }
 
         return is_resource($contents)
@@ -139,12 +141,13 @@ class FilesystemAdapter implements FilesystemContract, CloudFilesystemContract
      * @param  string  $path
      * @param  \Sirius\Filesystem\File|\Sirius\Filesystem\UploadedFile|\SplFileInfo  $file
      * @param  array  $options
+     * @param  string $defaults 默认获得存储文件名方法
      *
      * @return string|false
      */
-    public function putFile($path, $file, $options = [])
+    public function putFile($path, $file, $options = [], $defaults = 'hashName')
     {
-        return $this->putFileAs($path, $file, $file->hashName(), $options);
+        return $this->putFileAs($path, $file, $file->$defaults(), $options);
     }
 
     /**
