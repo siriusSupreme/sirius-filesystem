@@ -8,25 +8,24 @@ use OpenCloud\Rackspace;
 use Sirius\Support\Arr;
 use InvalidArgumentException;
 use League\Flysystem\AdapterInterface;
-use League\Flysystem\FilesystemInterface;
 use League\Flysystem\Filesystem as Flysystem;
 use League\Flysystem\Adapter\Ftp as FtpAdapter;
 use League\Flysystem\Rackspace\RackspaceAdapter;
 use League\Flysystem\Adapter\Local as LocalAdapter;
 use League\Flysystem\AwsS3v3\AwsS3Adapter as S3Adapter;
 use Sirius\Filesystem\Contracts\Factory as FactoryContract;
+use Sirius\Support\Contracts\Repository;
+use Sirius\Support\Repository as Config;
 
-/**
- * @mixin \Sirius\Filesystem\Contracts\Filesystem
- */
+
 class FilesystemManager implements FactoryContract
 {
     /**
      * The application instance.
      *
-     * @var \Illuminate\Contracts\Foundation\Application
+     * @var \Sirius\Support\Contracts\Repository
      */
-    protected $app;
+    protected $config;
 
     /**
      * The array of resolved filesystem drivers.
@@ -45,12 +44,24 @@ class FilesystemManager implements FactoryContract
     /**
      * Create a new filesystem manager instance.
      *
-     * @param  \Illuminate\Contracts\Foundation\Application  $app
-     * @return void
+     * @param  Repository|array $config
+     *
      */
-    public function __construct($app)
+    public function __construct($config=[])
     {
-        $this->app = $app;
+//      默认配置
+      $defaults=require __DIR__.'/config.php';
+
+      if ($config instanceof Repository){
+        $config = $config->all();
+      } else{
+        $config=(array)$config;
+      }
+
+      $config=array_merge( $defaults,$config);
+
+      $this->config = new Config( $config );
+
     }
 
     /**
@@ -104,6 +115,7 @@ class FilesystemManager implements FactoryContract
      * Resolve the given disk.
      *
      * @param  string  $name
+     *
      * @return \Sirius\Filesystem\Contracts\Filesystem
      *
      * @throws \InvalidArgumentException
@@ -133,9 +145,9 @@ class FilesystemManager implements FactoryContract
      */
     protected function callCustomCreator(array $config)
     {
-        $driver = $this->customCreators[$config['driver']]($this->app, $config);
+        $driver = $this->customCreators[$config['driver']]( $config);
 
-        if ($driver instanceof FilesystemInterface) {
+        if ($driver instanceof Flysystem) {
             return $this->adapt($driver);
         }
 
@@ -254,7 +266,7 @@ class FilesystemManager implements FactoryContract
      *
      * @param  \League\Flysystem\AdapterInterface  $adapter
      * @param  array  $config
-     * @return \League\Flysystem\FilesystemInterface
+     * @return \League\Flysystem\Filesystem
      */
     protected function createFlysystem(AdapterInterface $adapter, array $config)
     {
@@ -266,10 +278,11 @@ class FilesystemManager implements FactoryContract
     /**
      * Adapt the filesystem implementation.
      *
-     * @param  \League\Flysystem\FilesystemInterface  $filesystem
-     * @return \Sirius\Filesystem\Contracts\Filesystem
+     * @param  \League\Flysystem\Filesystem  $filesystem
+     *
+     * @return \Sirius\Filesystem\Contracts\Filesystem|\Sirius\Filesystem\Contracts\Cloud
      */
-    protected function adapt(FilesystemInterface $filesystem)
+    protected function adapt(Flysystem $filesystem)
     {
         return new FilesystemAdapter($filesystem);
     }
@@ -294,7 +307,7 @@ class FilesystemManager implements FactoryContract
      */
     protected function getConfig($name)
     {
-        return $this->app['config']["filesystems.disks.{$name}"];
+        return $this->config["disks.{$name}"];
     }
 
     /**
@@ -304,7 +317,7 @@ class FilesystemManager implements FactoryContract
      */
     public function getDefaultDriver()
     {
-        return $this->app['config']['filesystems.default'];
+        return $this->config['default'];
     }
 
     /**
@@ -314,7 +327,7 @@ class FilesystemManager implements FactoryContract
      */
     public function getDefaultCloudDriver()
     {
-        return $this->app['config']['filesystems.cloud'];
+        return $this->config['cloud'];
     }
 
     /**

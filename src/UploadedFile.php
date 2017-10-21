@@ -2,11 +2,10 @@
 
 namespace Sirius\Filesystem;
 
-use Sirius\Support\Arr;
-use Sirius\Container\Container;
-use Sirius\Filesystem\Contracts\Factory as FilesystemFactory;
 use Sirius\Filesystem\Traits\FileHelpers;
 use Sirius\Macro\Traits\Macroable;
+use Sirius\Support\Arr;
+use Sirius\Filesystem\Contracts\Factory as FilesystemFactory;
 use Symfony\Component\HttpFoundation\File\UploadedFile as SymfonyUploadedFile;
 
 class UploadedFile extends SymfonyUploadedFile
@@ -72,7 +71,7 @@ class UploadedFile extends SymfonyUploadedFile
 
         $disk = Arr::pull($options, 'disk');
 
-        return Container::getInstance()->make(FilesystemFactory::class)->disk($disk)->putFileAs(
+        return (new FilesystemManager( ))->disk($disk)->putFileAs(
             $path, $this, $name, $options
         );
     }

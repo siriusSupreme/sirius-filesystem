@@ -3,42 +3,39 @@
 namespace Sirius\Filesystem;
 
 use Carbon\Carbon;
-use RuntimeException;
-use Sirius\Filesystem\File;
-use Sirius\Support\Str;
 use InvalidArgumentException;
-use Sirius\Filesystem\UploadedFile;
-use Sirius\Support\Collection;
+use League\Flysystem\Adapter\Local as LocalAdapter;
 use League\Flysystem\AdapterInterface;
-use PHPUnit\Framework\Assert as PHPUnit;
-use League\Flysystem\FilesystemInterface;
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
 use League\Flysystem\FileNotFoundException;
+use League\Flysystem\Filesystem;
 use League\Flysystem\Rackspace\RackspaceAdapter;
-use League\Flysystem\Adapter\Local as LocalAdapter;
+use PHPUnit\Framework\Assert as PHPUnit;
+use RuntimeException;
 use Sirius\Filesystem\Contracts\Cloud as CloudFilesystemContract;
 use Sirius\Filesystem\Contracts\Filesystem as FilesystemContract;
 use Sirius\Filesystem\Exceptions\FileNotFoundException as ContractFileNotFoundException;
+use Sirius\Support\Collection;
+use Sirius\Support\Str;
 
 /**
- * @mixin \League\Flysystem\FilesystemInterface
+ * @mixin \League\Flysystem\Filesystem
  */
 class FilesystemAdapter implements FilesystemContract, CloudFilesystemContract
 {
     /**
      * The Flysystem filesystem implementation.
      *
-     * @var \League\Flysystem\FilesystemInterface
+     * @var \League\Flysystem\Filesystem
      */
     protected $driver;
 
     /**
      * Create a new filesystem adapter instance.
      *
-     * @param  \League\Flysystem\FilesystemInterface  $driver
-     * @return void
+     * @param  \League\Flysystem\Filesystem  $driver
      */
-    public function __construct(FilesystemInterface $driver)
+    public function __construct(Filesystem $driver)
     {
         $this->driver = $driver;
     }
@@ -197,7 +194,7 @@ class FilesystemAdapter implements FilesystemContract, CloudFilesystemContract
      *
      * @param  string  $path
      * @param  string  $visibility
-     * @return void
+     * @return bool
      */
     public function setVisibility($path, $visibility)
     {
@@ -537,7 +534,7 @@ class FilesystemAdapter implements FilesystemContract, CloudFilesystemContract
     /**
      * Get the Flysystem driver.
      *
-     * @return \League\Flysystem\FilesystemInterface
+     * @return \League\Flysystem\Filesystem
      */
     public function getDriver()
     {
@@ -571,7 +568,7 @@ class FilesystemAdapter implements FilesystemContract, CloudFilesystemContract
     protected function parseVisibility($visibility)
     {
         if (is_null($visibility)) {
-            return;
+            return null;
         }
 
         switch ($visibility) {
