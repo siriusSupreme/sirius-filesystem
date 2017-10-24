@@ -20,7 +20,6 @@
     "league/flysystem": "^1.0",
     "league/flysystem-aws-s3-v3": "^1.0",
     "league/flysystem-rackspace": "^1.0",
-    "siriussupreme/sirius-container": "^1.0",
     "siriussupreme/sirius-macro": "^1.0",
     "siriussupreme/sirius-support": "^1.0",
     "symfony/Finder": "^3.3",
