@@ -67,8 +67,6 @@ class FilesystemManager implements FactoryContract
 
       $this->config = new Config( $config );
 
-      self::$instance=$this;
-
     }
 
   /**
