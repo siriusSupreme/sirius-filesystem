@@ -89,7 +89,7 @@ class FilesystemManager implements FactoryContract
      * Get a filesystem instance.
      *
      * @param  string  $name
-     * @return \Sirius\Filesystem\Contracts\Filesystem
+     * @return \Sirius\Filesystem\FilesystemAdapter
      */
     public function drive($name = null)
     {
@@ -100,7 +100,8 @@ class FilesystemManager implements FactoryContract
      * Get a filesystem instance.
      *
      * @param  string  $name
-     * @return \Sirius\Filesystem\Contracts\Filesystem
+     *
+     * @return \Sirius\Filesystem\FilesystemAdapter
      */
     public function disk($name = null)
     {
@@ -112,7 +113,7 @@ class FilesystemManager implements FactoryContract
     /**
      * Get a default cloud filesystem instance.
      *
-     * @return \Sirius\Filesystem\Contracts\Filesystem
+     * @return \Sirius\Filesystem\FilesystemAdapter
      */
     public function cloud()
     {
@@ -125,7 +126,7 @@ class FilesystemManager implements FactoryContract
      * Attempt to get the disk from the local cache.
      *
      * @param  string  $name
-     * @return \Sirius\Filesystem\Contracts\Filesystem
+     * @return \Sirius\Filesystem\FilesystemAdapter
      */
     protected function get($name)
     {
@@ -137,7 +138,7 @@ class FilesystemManager implements FactoryContract
      *
      * @param  string  $name
      *
-     * @return \Sirius\Filesystem\Contracts\Filesystem
+     * @return \Sirius\Filesystem\FilesystemAdapter
      *
      * @throws \InvalidArgumentException
      */
@@ -162,7 +163,7 @@ class FilesystemManager implements FactoryContract
      * Call a custom driver creator.
      *
      * @param  array  $config
-     * @return \Sirius\Filesystem\Contracts\Filesystem
+     * @return \Sirius\Filesystem\FilesystemAdapter
      */
     protected function callCustomCreator(array $config)
     {
@@ -179,7 +180,7 @@ class FilesystemManager implements FactoryContract
      * Create an instance of the local driver.
      *
      * @param  array  $config
-     * @return \Sirius\Filesystem\Contracts\Filesystem
+     * @return \Sirius\Filesystem\FilesystemAdapter
      */
     public function createLocalDriver(array $config)
     {
@@ -198,7 +199,7 @@ class FilesystemManager implements FactoryContract
      * Create an instance of the ftp driver.
      *
      * @param  array  $config
-     * @return \Sirius\Filesystem\Contracts\Filesystem
+     * @return \Sirius\Filesystem\FilesystemAdapter
      */
     public function createFtpDriver(array $config)
     {
@@ -301,7 +302,7 @@ class FilesystemManager implements FactoryContract
      *
      * @param  \League\Flysystem\Filesystem  $filesystem
      *
-     * @return \Sirius\Filesystem\Contracts\Filesystem|\Sirius\Filesystem\Contracts\Cloud
+     * @return \Sirius\Filesystem\FilesystemAdapter
      */
     protected function adapt(Flysystem $filesystem)
     {
